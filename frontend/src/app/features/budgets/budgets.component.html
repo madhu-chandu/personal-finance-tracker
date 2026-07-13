@@ -1,0 +1,61 @@
+<div class="budgets-page">
+  <div class="header-row">
+    <h1>Budgets</h1>
+    <div class="filters">
+      <select [(ngModel)]="month" [ngModelOptions]="{standalone: true}" (change)="load()">
+        <option *ngFor="let m of months; let i = index" [value]="i+1">{{ m }}</option>
+      </select>
+      <select [(ngModel)]="year" [ngModelOptions]="{standalone: true}" (change)="load()">
+        <option *ngFor="let y of [year-1, year, year+1]" [value]="y">{{ y }}</option>
+      </select>
+      <button class="btn btn-primary" (click)="openAddForm()">+ Add Budget</button>
+    </div>
+  </div>
+
+  <p *ngIf="error" class="text-danger">{{ error }}</p>
+
+  <div class="card form-card" *ngIf="showForm">
+    <h3>{{ editingId ? 'Edit' : 'Add' }} Budget for {{ months[month-1] }} {{ year }}</h3>
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="grid grid-cols-2 form-grid">
+        <div class="form-group">
+          <label>Category</label>
+          <select formControlName="categoryId">
+            <option [value]="null" disabled>Select category</option>
+            <option *ngFor="let c of categories" [value]="c.id">{{ c.name }}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Monthly Limit</label>
+          <input type="number" step="0.01" formControlName="monthlyLimit" placeholder="0.00">
+        </div>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" (click)="cancelForm()">Cancel</button>
+        <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Save</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="grid grid-cols-2 budget-grid" *ngIf="!loading && budgets.length > 0">
+    <div class="card budget-card" *ngFor="let b of budgets">
+      <div class="budget-header">
+        <span class="budget-category">{{ b.categoryName }}</span>
+        <span class="badge" [class.badge-expense]="b.overBudget" [class.badge-income]="!b.overBudget">
+          {{ b.overBudget ? 'Over Budget' : 'On Track' }}
+        </span>
+      </div>
+      <div class="budget-amounts">₹{{ b.spent | number:'1.2-2' }} spent of ₹{{ b.monthlyLimit | number:'1.2-2' }}</div>
+      <div class="progress-bar">
+        <div class="progress-fill" [class.over]="b.overBudget" [style.width.%]="progressPercent(b)"></div>
+      </div>
+      <div class="budget-actions">
+        <button class="btn-icon" (click)="editBudget(b)">✏️ Edit</button>
+        <button class="btn-icon" (click)="deleteBudget(b.id!)">🗑️ Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <p *ngIf="loading" class="text-muted">Loading budgets...</p>
+  <p *ngIf="!loading && budgets.length === 0" class="text-muted">No budgets set for this month. Add one to start tracking!</p>
+</div>

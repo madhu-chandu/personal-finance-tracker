@@ -1,0 +1,24 @@
+<div class="auth-container">
+  <form class="card auth-card" [formGroup]="form" (ngSubmit)="submit()">
+    <h2>Welcome back</h2>
+    <p class="text-muted">Log in to manage your finances</p>
+
+    <div class="form-group">
+      <label>Username</label>
+      <input type="text" formControlName="username" placeholder="Enter your username">
+    </div>
+
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" formControlName="password" placeholder="Enter your password">
+    </div>
+
+    <p class="text-danger" *ngIf="error">{{ error }}</p>
+
+    <button class="btn btn-primary" type="submit" [disabled]="form.invalid || loading">
+      {{ loading ? 'Logging in...' : 'Log In' }}
+    </button>
+
+    <p class="switch-link">Don't have an account? <a routerLink="/signup">Sign up</a></p>
+  </form>
+</div>

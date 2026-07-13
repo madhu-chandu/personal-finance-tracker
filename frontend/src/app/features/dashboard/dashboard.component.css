@@ -1,0 +1,71 @@
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.header-row h1 { margin: 0; font-size: 24px; }
+
+.filters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.filters select { width: auto; min-width: 110px; }
+
+.stats-grid { margin-bottom: 20px; }
+
+.charts-grid { margin-bottom: 20px; }
+
+.chart-card h3 { margin-top: 0; font-size: 15px; }
+
+.chart-wrap { position: relative; height: 260px; }
+
+.budget-alerts h3 { margin-top: 0; font-size: 15px; }
+
+.budget-row {
+  display: grid;
+  grid-template-columns: 1fr 2fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.budget-row:last-child { border-bottom: none; }
+
+.budget-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.budget-category { font-weight: 600; font-size: 14px; }
+.budget-amounts { font-size: 12px; color: #6b7280; }
+
+.progress-bar {
+  background: #e5e7eb;
+  border-radius: 999px;
+  height: 8px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #16a34a;
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
+.progress-fill.over { background: #dc2626; }
+
+@media (max-width: 640px) {
+  .budget-row {
+    grid-template-columns: 1fr;
+    align-items: flex-start;
+  }
+}

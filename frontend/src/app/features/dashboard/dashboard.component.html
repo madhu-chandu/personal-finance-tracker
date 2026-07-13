@@ -1,0 +1,73 @@
+<div class="dashboard">
+  <div class="header-row">
+    <h1>Dashboard</h1>
+    <div class="filters">
+      <select [(ngModel)]="month" (change)="load()">
+        <option *ngFor="let m of months; let i = index" [value]="i+1">{{ m }}</option>
+      </select>
+      <select [(ngModel)]="year" (change)="load()">
+        <option *ngFor="let y of [year-1, year, year+1]" [value]="y">{{ y }}</option>
+      </select>
+      <button class="btn btn-secondary" (click)="downloadCsv()">Export CSV</button>
+      <button class="btn btn-primary" (click)="downloadPdf()">Export PDF</button>
+    </div>
+  </div>
+
+  <p *ngIf="loading" class="text-muted">Loading dashboard...</p>
+  <p *ngIf="error" class="text-danger">{{ error }}</p>
+
+  <ng-container *ngIf="summary && !loading">
+    <div class="grid grid-cols-3 stats-grid">
+      <div class="card">
+        <div class="stat-label">Total Income</div>
+        <div class="stat-value text-success">₹{{ summary.totalIncome | number:'1.2-2' }}</div>
+      </div>
+      <div class="card">
+        <div class="stat-label">Total Expense</div>
+        <div class="stat-value text-danger">₹{{ summary.totalExpense | number:'1.2-2' }}</div>
+      </div>
+      <div class="card">
+        <div class="stat-label">Balance</div>
+        <div class="stat-value" [class.text-success]="summary.balance >= 0" [class.text-danger]="summary.balance < 0">
+          ₹{{ summary.balance | number:'1.2-2' }}
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 charts-grid">
+      <div class="card chart-card">
+        <h3>Expense by Category</h3>
+        <div class="chart-wrap" *ngIf="expenseChartData.labels?.length; else noExpense">
+          <canvas baseChart [data]="expenseChartData" [type]="'doughnut'" [options]="expenseChartOptions"></canvas>
+        </div>
+        <ng-template #noExpense><p class="text-muted">No expenses recorded this month.</p></ng-template>
+      </div>
+
+      <div class="card chart-card">
+        <h3>Income vs Expense</h3>
+        <div class="chart-wrap">
+          <canvas baseChart [data]="incomeVsExpenseData" [type]="'bar'" [options]="incomeVsExpenseOptions"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="card budget-alerts">
+      <h3>Budget Status</h3>
+      <p class="text-muted" *ngIf="summary.budgetStatus.length === 0">No budgets set for this month yet.</p>
+      <div class="budget-row" *ngFor="let b of summary.budgetStatus">
+        <div class="budget-info">
+          <span class="budget-category">{{ b.categoryName }}</span>
+          <span class="budget-amounts">₹{{ b.spent | number:'1.2-2' }} / ₹{{ b.monthlyLimit | number:'1.2-2' }}</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" [class.over]="b.overBudget"
+               [style.width.%]="b.monthlyLimit ? (((b.spent || 0) / b.monthlyLimit) * 100 > 100 ? 100 : ((b.spent || 0) / b.monthlyLimit) * 100) : 0">
+          </div>
+        </div>
+        <span class="badge" [class.badge-expense]="b.overBudget" [class.badge-income]="!b.overBudget">
+          {{ b.overBudget ? 'Over Budget' : 'On Track' }}
+        </span>
+      </div>
+    </div>
+  </ng-container>
+</div>

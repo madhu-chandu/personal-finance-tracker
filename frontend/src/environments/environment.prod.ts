@@ -1,4 +1,4 @@
 export const environment = {
-  production: true,
-  apiUrl: 'http://localhost:8080/api'
+ production: true,
+ apiUrl: 'https://personal-finance-tracker-backend.up.railway.app/api'
 };

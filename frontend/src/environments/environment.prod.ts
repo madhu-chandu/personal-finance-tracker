@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://personal-finance-tracker-production-98a8.up.railway.app/api'
+  apiUrl: 'https://personal-finance-tracker-production-b08c.up.railway.app'
 };
